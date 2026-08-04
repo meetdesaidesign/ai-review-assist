@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=3" />
 </head>
 <body>
   <!-- ========== SCREEN 1: Call + Nudge ========== -->
@@ -23,9 +23,9 @@
         </div>
       </div>
       <div class="topbar-right">
-        <div class="search-locked" title="Requires AI Review Assist">
+        <div class="search-locked" id="search-bar" title="Requires AI Review Assist">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-          <span>Get AI Review Assist to search</span>
+          <span id="search-placeholder">Get AI Review Assist to search</span>
         </div>
         <button class="icon-btn" aria-label="Tags" type="button">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.6 13.4A2 2 0 0 0 21 12V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v7a2 2 0 0 0 .4 1.4l7 8a2 2 0 0 0 3.2 0l7-8z"/></svg>
@@ -52,7 +52,8 @@
         </section>
 
         <!-- REDESIGNED NUDGE -->
-        <div class="nudge-card" role="region" aria-labelledby="nudge-title">
+        <!-- Locked nudge (pre-purchase) -->
+        <div class="nudge-card" id="nudge-locked" role="region" aria-labelledby="nudge-title">
           <div class="nudge-glow" aria-hidden="true"></div>
           <div class="nudge-head">
             <div class="nudge-icon" aria-hidden="true">
@@ -67,40 +68,48 @@
             </div>
           </div>
           <p class="nudge-body">
-            Auto-summarize topics, questions, and action items — then buy only the seats you need.
+            Topics, questions, and action items — auto-summarized from your calls.
           </p>
           <div class="nudge-price-row">
             <span class="nudge-price">$9<span>/license/mo</span></span>
-            <span class="nudge-price-hint">Not tied to team size</span>
+            <span class="nudge-price-hint">Buy only what you need</span>
           </div>
           <button class="btn-primary nudge-cta" id="btn-get-now" type="button">
             Get Now
           </button>
         </div>
 
-        <section class="poi-section locked-section">
+        <!-- Unlocked insights (post-purchase) -->
+        <div class="insights-live" id="insights-live" hidden>
+          <div class="insights-banner" id="assign-reminder" hidden>
+            <span id="assign-reminder-text">2 licenses left</span>
+            <button type="button" class="btn-link" id="btn-assign-later">Assign</button>
+          </div>
+        </div>
+
+        <section class="poi-section" id="section-questions">
           <h3 class="poi-label">
             Questions
-            <span class="lock-chip" title="Requires AI Review Assist">
+            <span class="lock-chip" id="lock-questions" title="Requires AI Review Assist">
               <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1a5 5 0 0 0-5 5v3H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V11a2 2 0 0 0-2-2h-2V6a5 5 0 0 0-5-5zm0 2a3 3 0 0 1 3 3v3H9V6a3 3 0 0 1 3-3z"/></svg>
             </span>
           </h3>
-          <div class="stat-rows muted">
-            <div class="stat-row"><span>Asked by Customer</span><span class="stat-val">—</span></div>
-            <div class="stat-row"><span>Asked by Agent</span><span class="stat-val">—</span></div>
+          <div class="stat-rows" id="questions-stats">
+            <div class="stat-row muted"><span>Asked by Customer</span><span class="stat-val">—</span></div>
+            <div class="stat-row muted"><span>Asked by Agent</span><span class="stat-val">—</span></div>
           </div>
         </section>
 
-        <section class="poi-section locked-section">
+        <section class="poi-section" id="section-sentiment">
           <h3 class="poi-label">
             Sentiment Analysis
-            <span class="lock-chip" title="Requires AI Review Assist">
+            <span class="lock-chip" id="lock-sentiment" title="Requires AI Review Assist">
               <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1a5 5 0 0 0-5 5v3H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V11a2 2 0 0 0-2-2h-2V6a5 5 0 0 0-5-5zm0 2a3 3 0 0 1 3 3v3H9V6a3 3 0 0 1 3-3z"/></svg>
             </span>
           </h3>
-          <div class="stat-rows muted">
-            <div class="stat-row"><span>Positive</span><span class="stat-val">—</span></div>
-            <div class="stat-row"><span>Negative</span><span class="stat-val">—</span></div>
+          <div class="stat-rows" id="sentiment-stats">
+            <div class="stat-row muted"><span>Positive</span><span class="stat-val">—</span></div>
+            <div class="stat-row muted"><span>Negative</span><span class="stat-val">—</span></div>
           </div>
         </section>
       </aside>
@@ -114,7 +123,7 @@
           <div class="toolbar-actions">
             <button class="btn-ghost" type="button">Translate</button>
             <button class="btn-ghost" type="button">English ▾</button>
-            <button class="btn-ask-ai" type="button" disabled title="Requires AI Review Assist">
+            <button class="btn-ask-ai" id="btn-ask-ai" type="button" disabled title="Requires AI Review Assist">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"/></svg>
               Ask AI
             </button>
@@ -134,28 +143,28 @@
               <span class="speaker speaker-contact">New JustCall Contact</span>
               <time>0:18</time>
             </div>
-            <p>Yes — we’re trying to coach five managers without rolling this out to the whole floor yet.</p>
+            <p>Yes — we’re looking at how our managers review calls each week.</p>
           </article>
           <article class="bubble bubble-agent">
             <div class="bubble-meta">
               <span class="speaker speaker-agent">Meet Desai</span>
               <time>0:32</time>
             </div>
-            <p>Perfect. With license-based AI Review Assist, you can start with those five seats and expand later.</p>
+            <p>Got it. Most teams start with a handful of coaches, then expand once it’s working.</p>
           </article>
           <article class="bubble bubble-contact">
             <div class="bubble-meta">
               <span class="speaker speaker-contact">New JustCall Contact</span>
               <time>0:51</time>
             </div>
-            <p>That helps — we don’t want to pay for a hundred seats when only a few people will use it.</p>
+            <p>That makes sense. We don’t need this for everyone on day one.</p>
           </article>
           <article class="bubble bubble-agent">
             <div class="bubble-meta">
               <span class="speaker speaker-agent">Meet Desai</span>
               <time>1:08</time>
             </div>
-            <p>Exactly. Pick the license count at checkout, assign them after purchase, and add more anytime.</p>
+            <p>Perfect — happy to walk you through the options whenever you’re ready.</p>
           </article>
         </div>
       </main>
@@ -192,28 +201,28 @@
         <button class="icon-btn" id="btn-close-checkout" type="button" aria-label="Close checkout">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
-        <h1>Checkout</h1>
+        <h1 id="checkout-title">Checkout</h1>
       </header>
 
-      <div class="checkout-steps" aria-label="Checkout progress">
-        <div class="step step-done">
+      <div class="checkout-steps" id="checkout-steps" aria-label="Checkout progress">
+        <div class="step step-done" data-step="1">
           <span class="step-dot" aria-hidden="true">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>
           </span>
-          <span>Plan Details</span>
+          <span>Plan</span>
         </div>
         <div class="step-line" aria-hidden="true"></div>
-        <div class="step step-current" aria-current="step">
+        <div class="step step-current" data-step="2" aria-current="step">
           <span class="step-dot">2</span>
-          <span>Customise Addons</span>
+          <span>Add-ons</span>
         </div>
       </div>
 
-      <div class="checkout-body">
+      <!-- Step 2: Customise -->
+      <div class="checkout-body" id="panel-addons">
         <div class="checkout-main">
           <h2 class="section-title">Selected Add-ons</h2>
 
-          <!-- AI Review Assist — license based -->
           <article class="addon-card addon-card-focus" id="aira-card">
             <div class="addon-card-top">
               <div class="addon-identity">
@@ -229,72 +238,51 @@
                 </div>
               </div>
               <div class="addon-price-block">
-                <p class="addon-line-total" id="aira-line-total">$45.00</p>
-                <p class="addon-line-sub" id="aira-line-sub">5 licenses · monthly</p>
+                <p class="addon-line-total" id="aira-line-total">$45</p>
+                <p class="addon-line-sub" id="aira-line-sub">5 licenses</p>
               </div>
             </div>
 
-            <!-- License selector — focal control -->
-            <div class="license-panel">
-              <div class="license-panel-head">
-                <label for="license-input" class="license-label">Number of licenses</label>
-                <p class="license-hint">Team has <strong id="team-size-label">100</strong> members · assign after purchase</p>
+            <div class="license-row">
+              <label for="license-input" class="license-label">Licenses</label>
+              <div class="stepper" role="group" aria-label="License quantity">
+                <button type="button" class="stepper-btn" id="btn-dec" aria-label="Decrease licenses">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/></svg>
+                </button>
+                <input
+                  id="license-input"
+                  class="stepper-input"
+                  type="number"
+                  min="1"
+                  max="100"
+                  value="5"
+                  inputmode="numeric"
+                />
+                <button type="button" class="stepper-btn" id="btn-inc" aria-label="Increase licenses">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+                </button>
               </div>
-
-              <div class="license-controls">
-                <div class="stepper" role="group" aria-label="License quantity">
-                  <button type="button" class="stepper-btn" id="btn-dec" aria-label="Decrease licenses">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/></svg>
-                  </button>
-                  <input
-                    id="license-input"
-                    class="stepper-input"
-                    type="number"
-                    min="1"
-                    max="100"
-                    value="5"
-                    inputmode="numeric"
-                    aria-describedby="license-help"
-                  />
-                  <button type="button" class="stepper-btn" id="btn-inc" aria-label="Increase licenses">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-                  </button>
-                </div>
-
-                <div class="preset-row" role="group" aria-label="Quick license presets">
-                  <button type="button" class="preset" data-qty="1">Just me</button>
-                  <button type="button" class="preset preset-active" data-qty="5">5 seats</button>
-                  <button type="button" class="preset" data-qty="10">10 seats</button>
-                  <button type="button" class="preset" data-qty="100" id="preset-all">Entire team</button>
-                </div>
-              </div>
-
-              <p id="license-help" class="license-help">
-                You’ll assign these licenses to specific users after checkout. You can add or remove licenses anytime.
-              </p>
-
-              <div class="math-strip" aria-live="polite">
-                <span id="math-formula">5 × $9</span>
-                <span class="math-eq">=</span>
-                <strong id="math-result">$45/mo</strong>
-              </div>
+              <span class="license-max">of <span id="team-size-label">100</span></span>
             </div>
 
-            <ul class="feature-grid">
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Standard AI Scorecards</li>
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Standard Call Topics</li>
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Sentiment Analysis</li>
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> SMS Co-pilot</li>
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Smart Chapters &amp; Snippets</li>
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Call Tags, Questions &amp; Action Items</li>
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> CRM logging, APIs and Webhooks</li>
-              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Ask AI</li>
-            </ul>
-
-            <button type="button" class="btn-remove">Remove</button>
+            <div class="addon-card-foot">
+              <button type="button" class="btn-remove">Remove</button>
+              <details class="features-details">
+                <summary>What’s included</summary>
+                <ul class="feature-grid">
+                  <li>AI Scorecards</li>
+                  <li>Call Topics</li>
+                  <li>Sentiment Analysis</li>
+                  <li>SMS Co-pilot</li>
+                  <li>Smart Chapters</li>
+                  <li>Action Items</li>
+                  <li>CRM &amp; Webhooks</li>
+                  <li>Ask AI</li>
+                </ul>
+              </details>
+            </div>
           </article>
 
-          <!-- Existing Voice Agent (unchanged context) -->
           <article class="addon-card addon-card-muted">
             <div class="addon-card-top">
               <div class="addon-identity">
@@ -309,9 +297,9 @@
               <span class="active-pill">Currently Active</span>
             </div>
             <div class="tier-list">
-              <label class="tier"><input type="radio" name="voice" disabled /> <span><strong>Pay As You Go</strong><em>Ideal for low call volumes</em></span> <b>$0.99/min</b></label>
-              <label class="tier"><input type="radio" name="voice" disabled /> <span><strong>Agent Lite</strong><em>100 minutes included</em></span> <b>$99/mo</b></label>
-              <label class="tier tier-selected"><input type="radio" name="voice" checked disabled /> <span><strong>Agent Max</strong><em>300 minutes included</em></span> <b>$249/mo</b></label>
+              <label class="tier"><input type="radio" name="voice" disabled /> <span><strong>Pay As You Go</strong></span> <b>$0.99/min</b></label>
+              <label class="tier"><input type="radio" name="voice" disabled /> <span><strong>Agent Lite</strong></span> <b>$99/mo</b></label>
+              <label class="tier tier-selected"><input type="radio" name="voice" checked disabled /> <span><strong>Agent Max</strong></span> <b>$249/mo</b></label>
             </div>
           </article>
         </div>
@@ -322,44 +310,24 @@
             <button type="button" class="bill-opt bill-opt-active" id="bill-yearly" data-cycle="yearly">Yearly</button>
           </div>
 
-          <section class="charge-block">
-            <h3 id="renewal-heading">New annual charge</h3>
-            <div class="charge-row">
-              <div class="charge-label">
-                <span class="charge-name">AI Review Assist</span>
-                <span class="charge-desc" id="annual-desc">5 licenses · billed yearly</span>
-              </div>
-              <span class="charge-amt" id="annual-amt">$432</span>
+          <div class="charge-row charge-row-main">
+            <div class="charge-label">
+              <span class="charge-name">AI Review Assist</span>
+              <span class="charge-desc" id="summary-desc">5 licenses</span>
             </div>
-            <p class="charge-note" id="renewal-note">Applicable at plan renewal — Jul 24, 2027</p>
-          </section>
-
-          <section class="charge-block">
-            <h3>Upcoming charge</h3>
-            <div class="charge-row">
-              <div class="charge-label">
-                <span class="charge-name">
-                  AI Review Assist
-                  <button type="button" class="info-tip" aria-label="Proration info" title="Prorated for remaining days in billing period">i</button>
-                </span>
-                <span class="charge-desc" id="prorate-desc">Prorated · 353 days · 5 licenses</span>
-              </div>
-              <span class="charge-amt" id="prorate-amt">$418</span>
-            </div>
-            <div class="total-row">
-              <span>Total amount</span>
-              <strong id="total-amt">$418</strong>
-            </div>
-            <p class="charge-note">Due on Aug 24, 2026</p>
-          </section>
-
-          <div class="invoice-note">
-            You won’t be charged today. The prorated amount will be added to your upcoming invoice on Aug 04, 2026.
+            <span class="charge-amt" id="summary-amt">$432/yr</span>
           </div>
+
+          <div class="total-row">
+            <span>Due next invoice</span>
+            <strong id="total-amt">$418</strong>
+          </div>
+
+          <p class="invoice-note">Prorated · billed with your next invoice</p>
 
           <div class="summary-footer">
             <div class="due-today">
-              <span>Amount due today</span>
+              <span>Due today</span>
               <strong>$0</strong>
             </div>
             <button type="button" class="btn-primary btn-add-plan" id="btn-add-plan">
@@ -367,6 +335,247 @@
             </button>
           </div>
         </aside>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========== SCREEN 3: Billing ========== -->
+  <div id="screen-billing" class="screen" aria-label="Billing overview" hidden>
+    <div class="billing-app">
+      <aside class="billing-sidebar" aria-label="Billing navigation">
+        <div class="billing-brand">
+          <span class="billing-logo" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="3" width="18" height="18" rx="5" fill="#2563EB"/>
+              <path d="M8 12.5l2.5 2.5L16 9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="billing-brand-name">JustCall</span>
+        </div>
+
+        <button type="button" class="billing-back" id="btn-back-dashboard">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+          Back to Dashboard
+        </button>
+
+        <p class="billing-nav-label">Your Plan</p>
+        <nav class="billing-nav">
+          <a class="billing-nav-item billing-nav-active" href="#" aria-current="page">Overview</a>
+          <a class="billing-nav-item" href="#">Invoices</a>
+          <a class="billing-nav-item" href="#">Pricing</a>
+          <a class="billing-nav-item" href="#">Usage Balance</a>
+        </nav>
+
+        <div class="billing-credits">
+          <div class="billing-credits-row">
+            <span>Total Credits</span>
+            <strong>$0.77</strong>
+          </div>
+          <button type="button" class="btn-credits">Add Credits</button>
+          <button type="button" class="btn-link-muted">View Usage Balance</button>
+        </div>
+      </aside>
+
+      <div class="billing-main">
+        <header class="billing-topbar">
+          <div class="billing-topbar-actions">
+            <button type="button" class="btn-topbar">Live Call Support</button>
+            <button type="button" class="btn-topbar btn-topbar-primary">Dialer</button>
+            <button type="button" class="icon-btn" aria-label="Notifications">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+            </button>
+            <button type="button" class="billing-user" aria-label="Account">
+              <span class="avail-dot" aria-hidden="true"></span>
+              Available
+              <span class="user-avatar-sm" aria-hidden="true">MD</span>
+            </button>
+          </div>
+        </header>
+
+        <div class="billing-content">
+          <h1 class="billing-page-title">Billing</h1>
+
+          <!-- Plan Details -->
+          <section class="bill-card">
+            <div class="bill-card-head">
+              <div>
+                <h2>Plan Details</h2>
+                <p class="bill-card-sub">Your subscription renews on July 24, 2027</p>
+              </div>
+            </div>
+
+            <div class="plan-table" role="table" aria-label="Subscription plan">
+              <div class="plan-table-head" role="row">
+                <div role="columnheader">Plan Name</div>
+                <div role="columnheader">Plan Details</div>
+                <div role="columnheader">Licenses</div>
+                <div role="columnheader">Subscription Total</div>
+              </div>
+              <div class="plan-table-row" role="row">
+                <div role="cell">
+                  <strong>Team</strong>
+                  <span class="plan-cycle">Yearly</span>
+                </div>
+                <div role="cell">
+                  <ul class="plan-bullets">
+                    <li>Team Members: 9 x $348</li>
+                    <li>Phone Numbers: $116</li>
+                    <li>
+                      <button type="button" class="btn-link" id="btn-scroll-addons">Add-ons: <span id="plan-addons-amt">$5,148</span></button>
+                    </li>
+                  </ul>
+                </div>
+                <div role="cell">
+                  <span class="licenses-cell">9/9
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                  </span>
+                </div>
+                <div role="cell">
+                  <strong id="plan-sub-total">$8,396</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="pending-banner" role="status">
+              <span>Your recent payment is still pending. Please complete the payment to avoid service interruptions.</span>
+              <button type="button" class="btn-link pending-pay">Pay Now &gt;</button>
+            </div>
+          </section>
+
+          <!-- AI Review Assist manage -->
+          <section class="bill-card bill-card-aira" id="aira-manage" aria-labelledby="aira-manage-title" hidden>
+            <div class="aira-manage-top">
+              <div class="aira-manage-identity">
+                <div class="addon-icon purple" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M8 4h8a2 2 0 0 1 2 2v14l-6-3-6 3V6a2 2 0 0 1 2-2z" stroke="#7C3AED" stroke-width="1.75" fill="#EDE9FE"/>
+                    <path d="M12 8.5l.7 1.5 1.6.2-1.2 1.1.3 1.6L12 12l-1.4.9.3-1.6-1.2-1.1 1.6-.2.7-1.5z" fill="#7C3AED"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="aira-title-row">
+                    <h2 id="aira-manage-title">AI Review Assist</h2>
+                    <span class="active-pill">Active</span>
+                  </div>
+                  <p class="bill-card-sub" id="aira-manage-price">$9 / license / month · Yearly</p>
+                </div>
+              </div>
+              <div class="aira-manage-total">
+                <span class="aira-manage-total-label">Add-on total</span>
+                <strong id="aira-manage-amt">$432/yr</strong>
+              </div>
+            </div>
+
+            <div class="aira-manage-stats">
+              <div class="aira-stat">
+                <span class="aira-stat-label">Licenses</span>
+                <strong id="aira-stat-licenses">5</strong>
+              </div>
+              <div class="aira-stat">
+                <span class="aira-stat-label">Assigned</span>
+                <strong id="aira-stat-assigned">1 / 5</strong>
+              </div>
+              <div class="aira-stat aira-stat-grow">
+                <span class="aira-stat-label" id="aira-assign-status-label">4 left to assign</span>
+                <div class="aira-progress" aria-hidden="true">
+                  <div class="aira-progress-fill" id="aira-progress-fill" style="width: 20%"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="aira-manage-actions">
+              <button type="button" class="btn-primary" id="btn-assign-billing">Assign licenses</button>
+              <button type="button" class="btn-secondary" id="btn-edit-licenses">Edit quantity</button>
+              <button type="button" class="btn-ghost-danger" id="btn-remove-aira">Remove</button>
+            </div>
+
+            <div class="aira-edit-qty" id="aira-edit-qty" hidden>
+              <label for="billing-license-input" class="license-label">Licenses</label>
+              <div class="stepper" role="group" aria-label="License quantity">
+                <button type="button" class="stepper-btn" id="btn-bill-dec" aria-label="Decrease licenses">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/></svg>
+                </button>
+                <input
+                  id="billing-license-input"
+                  class="stepper-input"
+                  type="number"
+                  min="1"
+                  max="100"
+                  value="5"
+                  inputmode="numeric"
+                />
+                <button type="button" class="stepper-btn" id="btn-bill-inc" aria-label="Increase licenses">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+                </button>
+              </div>
+              <span class="license-max">of <span id="billing-team-size">100</span></span>
+              <button type="button" class="btn-secondary" id="btn-save-licenses">Update</button>
+            </div>
+          </section>
+
+          <!-- Address -->
+          <section class="bill-card bill-card-row">
+            <div class="bill-card-row-main">
+              <h2>
+                <svg class="check-ok" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>
+                Update Billing Address
+              </h2>
+              <p class="bill-card-sub">Navrang Pura, Hathijan, New York, New York, NY 10001, US</p>
+            </div>
+            <button type="button" class="btn-secondary">Update Address</button>
+          </section>
+
+          <!-- Payment -->
+          <section class="bill-card bill-card-row">
+            <div class="bill-card-row-main">
+              <h2>Payment Method</h2>
+              <p class="bill-card-sub">No card added. Add a card to ensure uninterrupted service and successful billing.</p>
+            </div>
+            <button type="button" class="btn-primary">Add Card</button>
+          </section>
+
+          <!-- Cancel -->
+          <section class="bill-card bill-card-row">
+            <div class="bill-card-row-main">
+              <h2>Cancel Subscription</h2>
+              <p class="bill-card-sub">
+                Cancelling will remove access at the end of your billing period. Prefer a break?
+                <button type="button" class="btn-link">Pause instead</button>
+              </p>
+            </div>
+            <button type="button" class="btn-secondary">Cancel Subscription</button>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assign licenses (billing / product — not checkout) -->
+  <div id="assign-overlay" class="assign-overlay" hidden>
+    <div class="assign-backdrop" id="assign-backdrop" aria-hidden="true"></div>
+    <div class="assign-sheet" role="dialog" aria-modal="true" aria-labelledby="assign-title">
+      <header class="assign-sheet-header">
+        <div class="assign-head">
+          <h2 id="assign-title">Assign licenses</h2>
+          <p class="assign-count" id="assign-count"><strong>0</strong> / 5</p>
+        </div>
+        <button class="icon-btn" id="btn-close-assign" type="button" aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </header>
+
+      <p class="assign-sub" id="assign-sub">Choose who gets AI Review Assist</p>
+
+      <div class="assign-search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="search" id="user-search" placeholder="Search team…" autocomplete="off" />
+      </div>
+
+      <ul class="user-list" id="user-list" role="listbox" aria-label="Team members" aria-multiselectable="true"></ul>
+
+      <div class="assign-footer">
+        <button type="button" class="btn-primary" id="btn-confirm-assign">Done</button>
       </div>
     </div>
   </div>
@@ -377,6 +586,6 @@
     <span id="toast-text">5 AI Review Assist licenses added to your plan</span>
   </div>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>
